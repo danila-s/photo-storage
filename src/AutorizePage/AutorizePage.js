@@ -18,14 +18,15 @@ class AutorizePage extends React.Component {
         const log = formData.get('login');
         loginToServer(log, pass)
             .then(data => {
-                if(typeof data !== "string"){
-                    this.props.changeAutorize(data)
-                }
-                else {
+                if(typeof data !== 'string'){
+                    this.props.changeAutorize(data) 
+                }else{
                     this.setState({string : data})
-                }
-                
-    })}
+                }           
+            }).catch(err => console.log(err))
+
+}
+            
 
     render() {
         const { string } = this.state;

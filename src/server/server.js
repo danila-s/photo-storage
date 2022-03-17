@@ -12,20 +12,6 @@ app.listen(8000, () => {
     console.log("Server has been started , port 8000 ");
 });
 
-app.get("/users", (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Content-Type", "application/json");
-    fs.readFile("./data.json", "utf-8", (err, data) => {
-        if (!err) {
-            const result = JSON.parse(data);
-            res.send(result);
-        } else {
-            console.log(err);
-        }
-    });
-});
-
-
 
 
 app.post("/login", (req, res) => {
@@ -37,12 +23,13 @@ app.post("/login", (req, res) => {
           const result = JSON.parse(data);
           const needUser = result.find(item => item.login === login)
           if(needUser){
-              needUser.password === password ? res.send(true):res.send(JSON.stringify("Неверный пароль"))
+              needUser.password === password ? res.status(200).json(true):res.status(401).json("Неверный пароль")
           }else {
-              res.send(JSON.stringify('Пользователя с таким логином не существует .'))
+              res.status(400).json('Пользователя с таким логином не существует .')
           }
         } else {
           console.log(err);
+          res.status(404);
         }
       });
     });

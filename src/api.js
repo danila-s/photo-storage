@@ -3,6 +3,7 @@ async function loginToServer(login, password) {
       login: login,
       password: password,
     };
+    try {
     const response = await fetch(`http://localhost:8000/login`, {
       method: "POST",
       headers: {
@@ -10,8 +11,12 @@ async function loginToServer(login, password) {
       },
       body: JSON.stringify(obj),
     });
+    
     const data = await response.json();
-    return data
+    return data}
+    catch(err) {
+        console.log(err)
+    }
   }
 
 
