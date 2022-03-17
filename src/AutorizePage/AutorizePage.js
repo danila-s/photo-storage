@@ -19,12 +19,12 @@ class AutorizePage extends React.Component {
         loginToServer(log, pass)
             .then(data => {
                 if(typeof data !== 'string'){
-                    this.props.changeAutorize(data) 
+                    this.props.changeAutorize(data.result)
+                    localStorage.setItem('token', data.token)
                 }else{
                     this.setState({string : data})
                 }           
-            }).catch(err => console.log(err))
-
+            })
 }
             
 
