@@ -1,12 +1,18 @@
 const fs = require("fs");
 const express = require("express");
+const multer = require("multer");
 const cors = require("cors");
 const app = express();
+
+const IMAGES_FOLDER = `${__dirname}/./static/images`;
+const DATA_FOLDER = `${__dirname}/./static/data`;
 
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
 
 app.listen(8000, () => {
     console.log("Server has been started , port 8000 ");
@@ -39,7 +45,7 @@ app.post("/login", (req, res) => {
                     tokens = tokens.filter(token => token.login !== login);
                     const newToken = getRandomString();
                     tokens.push({ login: login, token: newToken });
-                    res.status(200).json({result : true , token: newToken})
+                    res.status(200).json({ result: true, token: newToken })
                 } else {
                     res.status(401).json("Неверный пароль")
                 }
@@ -59,9 +65,38 @@ app.post("/token", (req, res) => {
     const { token } = req.body;
     const isTokenValid = tokens.find((t) => t.token === token);
     if (isTokenValid) {
-        res.status(200).json({result : true })
-      } else {
-        res.status(401).json({error: 'Not authorized' });
-      }
-    
+        res.status(200).json({ result: true })
+    } else {
+        res.status(401).json({ error: 'Not authorized' });
+    }
+
 });
+
+
+const galleryStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, `${IMAGES_FOLDER}/gallery`);
+    },
+    filename: function (req, file, cb) {
+        const { id } = req.params;
+        const json = fs.readFileSync(`${DATA_FOLDER}/gallery.json`);
+        const data = JSON.parse(json);
+        data[id] = file.originalname;
+        fs.writeFileSync(`${DATA_FOLDER}/gallery.json`, JSON.stringify(data));
+        cb(null, file.originalname);
+    }
+});
+const galleryUpload = multer({ storage: galleryStorage });
+
+
+app.get('/gallery', (req, res) => {
+    const json = fs.readFileSync(`${DATA_FOLDER}/gallery.json`);
+    res.send(json);
+})
+
+app.post('/gallery/:id', galleryUpload.single('upload-image'), (req, res) => {
+    console.log(req.body.description)
+    res.send('Файл загружен')
+})
+
+

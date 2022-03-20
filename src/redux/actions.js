@@ -11,6 +11,7 @@ function changeLoading() {
 }
 
 function changeAutorize(data) {
+    
   return {
     type: CHANGE_AUTORIZE,
     payload: {

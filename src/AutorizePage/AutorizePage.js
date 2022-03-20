@@ -1,8 +1,8 @@
 import React from "react";
 import './AutorizePage.css'
 import { loginToServer } from '../api'
-import {connect} from 'react-redux'
-import {changeAutorize} from '../redux/actions'
+import { connect } from 'react-redux'
+import { changeAutorize } from '../redux/actions'
 
 
 class AutorizePage extends React.Component {
@@ -18,15 +18,15 @@ class AutorizePage extends React.Component {
         const log = formData.get('login');
         loginToServer(log, pass)
             .then(data => {
-                if(typeof data !== 'string'){
+                if (typeof data !== 'string') {
                     this.props.changeAutorize(data.result)
                     localStorage.setItem('token', data.token)
-                }else{
-                    this.setState({string : data})
-                }           
+                } else {
+                    this.setState({ string: data })
+                }
             })
-}
-            
+    }
+
 
     render() {
         const { string } = this.state;
@@ -54,9 +54,9 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
-  return {
-    isAutorize : state.isAutorize
-  };
+    return {
+        isAutorize: state.isAutorize
+    };
 };
 
 const functionFromConnect = connect(mapStateToProps, mapDispatchToProps);

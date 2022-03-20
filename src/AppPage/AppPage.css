@@ -1,0 +1,22 @@
+.app-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.app-form-item{
+    margin: 15px;
+}
+
+.alert {
+    color: red;
+    font-size: 13px;
+}
+
+.description{
+    margin: 15px;
+    height: 60px;
+    width: 200px;
+    word-break: break-word;
+}

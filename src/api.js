@@ -28,7 +28,26 @@ async function loginWithToken(token) {
             headers: {
                 "Content-type": "application/json",
             },
-            body: JSON.stringify({token : token}),
+            body: JSON.stringify({ token: token }),
+        });
+
+        const data = await response.json();
+        return data
+    }
+    catch (err) {
+        alert('Что-то пошло не так!')
+        console.log(err)
+    }
+}
+
+async function upload(photo, description) {
+    try {
+        const response = await fetch(`http://localhost:8000/upload`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({ photo: photo, description: description }),
         });
 
         const data = await response.json();
@@ -41,4 +60,4 @@ async function loginWithToken(token) {
 }
 
 
-export { loginToServer , loginWithToken }
+export { loginToServer, loginWithToken, upload }

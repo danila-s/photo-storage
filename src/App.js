@@ -12,14 +12,14 @@ class App extends React.Component {
     const isToken = localStorage.getItem('token')
     if (isToken) {
       loginWithToken(isToken)
-      .then(data => {
-        if(typeof data !== 'string'){
+        .then(data => {
+          if (typeof data !== 'string') {
             this.props.changeAutorize(data.result)
-        }else{
-          console.log(data)
-        }           
-    })
-        
+          } else {
+            console.log(data)
+          }
+        })
+
     }
 
   }
