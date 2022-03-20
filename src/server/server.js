@@ -2,15 +2,33 @@ const fs = require("fs");
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
+const mysql = require('mysql');
 const app = express();
 
 const IMAGES_FOLDER = `${__dirname}/./static/images`;
 const DATA_FOLDER = `${__dirname}/./static/data`;
+const WAY_TO_IMG = `http://localhost:8000/images/gallery/`
 
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/static"));
+
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: 'password',
+    database: 'imgstorage'
+});
+connection.connect((err) => {
+    if (!err) {
+        console.log("SUCCESS");
+    }
+});
+
 
 
 
@@ -78,11 +96,17 @@ const galleryStorage = multer.diskStorage({
         cb(null, `${IMAGES_FOLDER}/gallery`);
     },
     filename: function (req, file, cb) {
-        const { id } = req.params;
-        const json = fs.readFileSync(`${DATA_FOLDER}/gallery.json`);
-        const data = JSON.parse(json);
-        data[id] = file.originalname;
-        fs.writeFileSync(`${DATA_FOLDER}/gallery.json`, JSON.stringify(data));
+        connection.query(`
+  INSERT INTO images (link, description)
+  VALUES ('${WAY_TO_IMG + file.originalname}', '${req.body.description}');
+`,
+            (err, data) => {
+                if (!err) {
+                    console.log(data);
+                }
+            });
+
+        console.log(req.body.description)
         cb(null, file.originalname);
     }
 });
@@ -90,13 +114,14 @@ const galleryUpload = multer({ storage: galleryStorage });
 
 
 app.get('/gallery', (req, res) => {
-    const json = fs.readFileSync(`${DATA_FOLDER}/gallery.json`);
-    res.send(json);
+    connection.query('SELECT link , description FROM images',
+        (err, data) => {
+            if (!err) {
+                res.send({ link: data[data.length - 1].link, description: data[data.length - 1].description });
+            }
+        });
 })
 
-app.post('/gallery/:id', galleryUpload.single('upload-image'), (req, res) => {
-    console.log(req.body.description)
+app.post('/gallery', galleryUpload.single('upload-image'), (req, res) => {
     res.send('Файл загружен')
 })
-
-
