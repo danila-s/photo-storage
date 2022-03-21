@@ -53,6 +53,7 @@ class AppPage extends React.Component {
                         })
                 })
                 .catch(err => {
+                    alert('Что-то пошло не так')
                     console.log(err)
                     this.props.changeLoading();
                 })
