@@ -55,7 +55,6 @@ async function loginWithToken(token) {
         return data
     }
     catch (err) {
-        alert('Что-то пошло не так!')
         console.log(err)
     }
 }

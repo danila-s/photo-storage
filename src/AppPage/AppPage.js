@@ -11,7 +11,7 @@ class AppPage extends React.Component {
         isProblem: false,
         description: '',
         link: '',
-        file: null,
+        file: undefined,
         inputDescription: ''
     }
 
@@ -48,7 +48,7 @@ class AppPage extends React.Component {
                     this.setState({ isProblem: false })
                     getActualImg()
                         .then(data => {
-                            this.setState({ description: data.description, link: data.link, file: null, inputDescription: '' })
+                            this.setState({ description: data.description, link: data.link, file: undefined, inputDescription: '' })
                             this.props.changeLoading();
                         })
                 })
