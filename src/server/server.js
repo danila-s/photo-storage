@@ -103,10 +103,11 @@ const galleryStorage = multer.diskStorage({
             (err, data) => {
                 if (!err) {
                     console.log(data);
+                }else {
+                    console.log(err);
                 }
             });
 
-        console.log(req.body.description)
         cb(null, file.originalname);
     }
 });
@@ -117,7 +118,9 @@ app.get('/gallery', (req, res) => {
     connection.query('SELECT link , description FROM images',
         (err, data) => {
             if (!err) {
-                res.send({ link: data[data.length - 1].link, description: data[data.length - 1].description });
+                res.status(200).send({ link: data[data.length - 1].link, description: data[data.length - 1].description });
+            }else {
+                res.status(500);
             }
         });
 })

@@ -2,7 +2,7 @@ import React from "react";
 import './AutorizePage.css'
 import { loginToServer } from '../api'
 import { connect } from 'react-redux'
-import { changeAutorize } from '../redux/actions'
+import { changeAutorize , changeLoading } from '../redux/actions'
 
 
 class AutorizePage extends React.Component {
@@ -13,6 +13,7 @@ class AutorizePage extends React.Component {
 
     loginToServer = (e) => {
         e.preventDefault();
+        this.props.changeLoading();
         const formData = new FormData(e.target)
         const pass = formData.get('password');
         const log = formData.get('login');
@@ -24,6 +25,7 @@ class AutorizePage extends React.Component {
                 } else {
                     this.setState({ string: data })
                 }
+                this.props.changeLoading();
             })
     }
 
@@ -50,7 +52,8 @@ class AutorizePage extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    changeAutorize: (data) => dispatch(changeAutorize(data))
+    changeAutorize: (data) => dispatch(changeAutorize(data)),
+    changeLoading: () => dispatch(changeLoading())
 });
 
 const mapStateToProps = (state) => {

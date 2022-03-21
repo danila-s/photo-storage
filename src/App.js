@@ -26,9 +26,12 @@ class App extends React.Component {
 
   render() {
 
-    const { isAutorize } = this.props
+    const { isAutorize , isLoading } = this.props
     return (
       <div className="App">
+        {isLoading ? <div className='loading'>
+          <p className='loading-text'>Loading ...</p>
+        </div> : <></>}
         {isAutorize ? <AppPage /> : <AutorizePage />}
       </div>
     );
@@ -41,7 +44,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => {
   return {
-    isAutorize: state.isAutorize
+    isAutorize: state.isAutorize,
+    isLoading : state.isLoading
   };
 };
 

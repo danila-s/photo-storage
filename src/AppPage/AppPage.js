@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux'
-import { changeAutorize } from '../redux/actions'
+import { changeAutorize , changeLoading } from '../redux/actions'
 import './AppPage.css'
 import { getActualImg } from '../api'
 
@@ -19,7 +19,9 @@ class AppPage extends React.Component {
 
     componentDidMount() {
         getActualImg()
-            .then(data => this.setState({ description: data.description, link: data.link }))
+            .then(data => {
+                this.setState({ description: data.description, link: data.link })
+            })
     }
 
 
@@ -36,6 +38,7 @@ class AppPage extends React.Component {
         const img = formData.get('upload-image')
 
         if (img.size <= 5000000) {
+            this.props.changeLoading()
             fetch(`http://localhost:8000/gallery`, {
                 method: 'POST',
                 body: formData,
@@ -44,9 +47,15 @@ class AppPage extends React.Component {
                 .then(res => {
                     this.setState({ isProblem: false })
                     getActualImg()
-                        .then(data => this.setState({ description: data.description, link: data.link, file: null, inputDescription: '' }))
+                        .then(data => {
+                            this.setState({ description: data.description, link: data.link, file: null, inputDescription: '' })
+                            this.props.changeLoading();
+                        })
                 })
-                .catch(err => console.log(err))
+                .catch(err => {
+                    console.log(err)
+                    this.props.changeLoading();
+                })
         }
         else {
             this.setState({ isProblem: true })
@@ -110,7 +119,8 @@ class AppPage extends React.Component {
 
 
 const mapDispatchToProps = (dispatch) => ({
-    changeAutorize: (data) => dispatch(changeAutorize(data))
+    changeAutorize: (data) => dispatch(changeAutorize(data)),
+    changeLoading: () => dispatch(changeLoading())
 });
 
 const mapStateToProps = (state) => {
